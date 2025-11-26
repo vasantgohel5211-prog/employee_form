@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Check, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 import { Employee, DEPARTMENTS, AVAILABLE_SKILLS } from '../types';
 import { getEmployeeById, saveEmployee } from '../services/employeeService';
 

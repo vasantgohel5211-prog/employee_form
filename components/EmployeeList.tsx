@@ -36,6 +36,9 @@ const EmployeeList: React.FC = () => {
     const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
     if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(totalPages);
+    } else if (totalPages === 0 && currentPage !== 1) {
+       // Reset to page 1 if list is empty
+       setCurrentPage(1);
     }
   }, [filteredEmployees.length, itemsPerPage, currentPage]);
 

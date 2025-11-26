@@ -49,10 +49,17 @@ export const getEmployees = (): Employee[] => {
     return DUMMY_DATA;
   }
   try {
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored);
+    // Validate that the parsed data is actually an array
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+    // If not an array (e.g. corrupted), reset to dummy data
+    console.warn("Stored data is not an array. Resetting to default.");
+    return DUMMY_DATA;
   } catch (error) {
     console.error("Failed to parse employees from local storage", error);
-    // Recover by resetting to dummy data or returning empty
+    // Recover by resetting to dummy data
     return DUMMY_DATA;
   }
 };
