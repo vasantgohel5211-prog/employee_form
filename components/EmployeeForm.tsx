@@ -14,13 +14,21 @@ interface FormErrors {
   skills?: string;
 }
 
+// Safe ID generator fallback
+const generateId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9);
+};
+
 const EmployeeForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditMode = Boolean(id);
 
   const [formData, setFormData] = useState<Employee>({
-    id: crypto.randomUUID(),
+    id: generateId(),
     fullName: '',
     email: '',
     phone: '',
@@ -44,6 +52,22 @@ const EmployeeForm: React.FC = () => {
       } else {
         navigate('/not-found');
       }
+    } else {
+      // Reset form when switching to "New" mode or initial load
+      setFormData({
+        id: generateId(),
+        fullName: '',
+        email: '',
+        phone: '',
+        dateOfJoining: '',
+        shiftTime: '',
+        isActive: true,
+        skills: [],
+        department: '',
+        address: ''
+      });
+      setTouched({});
+      setErrors({});
     }
   }, [id, isEditMode, navigate]);
 

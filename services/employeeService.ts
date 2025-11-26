@@ -48,7 +48,13 @@ export const getEmployees = (): Employee[] => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DUMMY_DATA));
     return DUMMY_DATA;
   }
-  return JSON.parse(stored);
+  try {
+    return JSON.parse(stored);
+  } catch (error) {
+    console.error("Failed to parse employees from local storage", error);
+    // Recover by resetting to dummy data or returning empty
+    return DUMMY_DATA;
+  }
 };
 
 export const getEmployeeById = (id: string): Employee | undefined => {

@@ -31,6 +31,14 @@ const EmployeeList: React.FC = () => {
     setCurrentPage(1); // Reset to first page on search
   }, [searchTerm, employees]);
 
+  // Adjust current page if items are deleted and page becomes empty
+  useEffect(() => {
+    const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [filteredEmployees.length, itemsPerPage, currentPage]);
+
   const loadData = () => {
     setIsLoading(true);
     // Simulate slight network delay for realism
