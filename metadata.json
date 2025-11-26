@@ -1,0 +1,5 @@
+{
+  "name": "Employee Management System",
+  "description": "A comprehensive CRUD application for managing employee records with local storage persistence, featuring a responsive design and validation.",
+  "requestFramePermissions": []
+}
