@@ -152,7 +152,6 @@ const EmployeeForm: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    // Simulate API delay
     setTimeout(() => {
       saveEmployee(formData);
       setIsSubmitting(false);
@@ -219,7 +218,7 @@ const EmployeeForm: React.FC = () => {
 
           {/* Row 2 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <div className="md:col-span-1">
+            <div className="md:col-span-1">
               <label className="block text-sm font-medium text-slate-700 mb-1">Phone *</label>
               <input
                 type="tel"
@@ -245,7 +244,7 @@ const EmployeeForm: React.FC = () => {
                 onBlur={() => handleBlur('dateOfJoining')}
                 className={`block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border ${touched.dateOfJoining && errors.dateOfJoining ? 'border-red-500' : ''}`}
               />
-               {touched.dateOfJoining && errors.dateOfJoining && (
+              {touched.dateOfJoining && errors.dateOfJoining && (
                 <p className="mt-1 text-xs text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.dateOfJoining}</p>
               )}
             </div>
@@ -260,7 +259,7 @@ const EmployeeForm: React.FC = () => {
                 onBlur={() => handleBlur('shiftTime')}
                 className={`block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border ${touched.shiftTime && errors.shiftTime ? 'border-red-500' : ''}`}
               />
-               {touched.shiftTime && errors.shiftTime && (
+              {touched.shiftTime && errors.shiftTime && (
                 <p className="mt-1 text-xs text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.shiftTime}</p>
               )}
             </div>
@@ -282,7 +281,7 @@ const EmployeeForm: React.FC = () => {
                   <option key={dept} value={dept}>{dept}</option>
                 ))}
               </select>
-               {touched.department && errors.department && (
+              {touched.department && errors.department && (
                 <p className="mt-1 text-xs text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.department}</p>
               )}
             </div>
@@ -305,7 +304,7 @@ const EmployeeForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Skills (Multi-select) */}
+          {/* Skills */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Skills *</label>
             <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 p-4 border rounded-md ${touched.skills && errors.skills ? 'border-red-300 bg-red-50' : 'border-slate-200 bg-slate-50'}`}>
@@ -321,10 +320,51 @@ const EmployeeForm: React.FC = () => {
                 </label>
               ))}
             </div>
-             {touched.skills && errors.skills && (
-                <p className="mt-1 text-xs text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.skills}</p>
-              )}
+            {touched.skills && errors.skills && (
+              <p className="mt-1 text-xs text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.skills}</p>
+            )}
           </div>
+
+          {/* 👉 Added for Current Location Button */}
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={async () => {
+                if (!navigator.geolocation) {
+                  alert("Geolocation not supported in this browser.");
+                  return;
+                }
+
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                  const { latitude, longitude } = pos.coords;
+
+                  try {
+                    const res = await fetch(
+                      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+                    );
+                    const data = await res.json();
+
+                    const foundAddress =
+                      data?.display_name || `${latitude}, ${longitude}`;
+
+                    setFormData((prev) => ({
+                      ...prev,
+                      address: foundAddress
+                    }));
+                  } catch (err) {
+                    console.error(err);
+                    alert("Failed to get address.");
+                  }
+                }, () => {
+                  alert("Unable to retrieve location.");
+                });
+              }}
+              className="mb-2 px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded"
+            >
+              Use Current Location
+            </button>
+          </div>
+          {/* 👈 End Added Code */}
 
           {/* Address */}
           <div>
@@ -340,7 +380,7 @@ const EmployeeForm: React.FC = () => {
           </div>
 
           <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
-             <Link
+            <Link
               to="/employees"
               className="inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
@@ -354,7 +394,7 @@ const EmployeeForm: React.FC = () => {
               }`}
             >
               {isSubmitting ? (
-                 <>Saving...</>
+                <>Saving...</>
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
